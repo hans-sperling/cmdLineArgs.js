@@ -14,7 +14,7 @@ Simple handling of command line arguments in node.js
 
 - On console:
 ```
-    $ node runApplication.js -p 8080 -e -q
+    $ node ./dev/run.js -p 8080 -e -q
 ```
 
 ## Method(s)
