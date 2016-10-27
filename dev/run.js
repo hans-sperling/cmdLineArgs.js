@@ -1,5 +1,7 @@
 
 var cla         = require('../src/cmdLineArgs.js'),
+    username    = '',
+    password    = '',
     isExtensive = false,
     isQuiet     = false,
     port        = 8080;
@@ -8,6 +10,9 @@ cla.handle({
     caseSensitive  : false,
     prefix         : '-',
     validArguments : [{
+        arguments : ['a', 'account'],
+        callback  : setAccountData
+    }, {
         arguments : ['e', 'extensive'],
         callback  : setExtensiveMode
     }, {
@@ -20,6 +25,12 @@ cla.handle({
 });
 
 // ------------------------------------------------------------------------------------------------------------- Methods
+
+
+function setAccountData(value, otherArgs) {
+    username = value;
+    password = otherArgs[0];
+}
 
 function setExtensiveMode() {
     isExtensive = true;
@@ -36,6 +47,8 @@ function setQuietMode() {
 // ----------------------------------------------------------------------------------------------------- Result / Output
 
 console.log("Result:\n");
+console.log('username   :', username);
+console.log('password   :', password);
 console.log('isExtensive:', isExtensive);
-console.log('isQuiet    :', isQuiet    );
-console.log('port       :', port       );
+console.log('isQuiet    :', isQuiet);
+console.log('port       :', port);

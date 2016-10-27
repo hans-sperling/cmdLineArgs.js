@@ -127,6 +127,7 @@ module.exports = (function cmdLineArgs() {
 
                         // Check if next argument is a value for the current argument or just an other argument
                         if (!!(arguments[argumentsIndex + 1]) && arguments[argumentsIndex + 1][0] !== cfg.prefix) {
+                            restArguments.shift();
                             validArgument.callback(arguments[++argumentsIndex], restArguments);
                         }
                         else {
@@ -148,6 +149,7 @@ module.exports = (function cmdLineArgs() {
 
                         if (argument === (cfg.prefix + argumentListItem)) {
                             if (!!(arguments[argumentsIndex + 1]) && arguments[argumentsIndex + 1][0] !== cfg.prefix) {
+                                restArguments.shift();
                                 validArgument.callback(arguments[++argumentsIndex], restArguments);
                             }
                             else {

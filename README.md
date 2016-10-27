@@ -14,7 +14,7 @@ Simple handling of command line arguments in node.js
 
 - On console:
 ```
-    $ node ./dev/run.js -p 8080 -e -q
+    $ node ./dev/run.js -p 8080 -e -q -account "John Doe" "password123"
 ```
 
 ## Method(s)
@@ -39,6 +39,8 @@ Simple handling of command line arguments in node.js
 ```javascript
     var cla     = require('./cmdLineArgs.js'),
     
+    username    = '',
+    password    = '',
     isExtensive = false,
     isQuiet     = false,
     port        = 8080;
@@ -49,6 +51,9 @@ Simple handling of command line arguments in node.js
         caseSensitive  : false,
         prefix         : '-',
         validArguments : [{
+            arguments : ['a', 'account'],
+            callback  : setAccountData
+        }, {
             arguments : ['e', 'extensive'],
             callback  : setExtensiveMode
         }, {
@@ -61,6 +66,11 @@ Simple handling of command line arguments in node.js
     });
     
     
+    
+    function setAccountData(value, otherArgs) {
+        username = value;
+        password = otherArgs[0];
+    }
     
     function setExtensiveMode() {
         isExtensive = true;
