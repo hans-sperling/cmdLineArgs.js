@@ -1,46 +1,41 @@
 
-var cla = require('../src/cmdLineArgs.js'),
-    a   = null,
-    b   = null,
-    c   = null;
+var cla         = require('../src/cmdLineArgs.js'),
+    isExtensive = false,
+    isQuiet     = false,
+    port        = 8080;
 
 cla.handle({
     caseSensitive  : false,
     prefix         : '-',
     validArguments : [{
-        arguments : 'a',
-        callback  : setA
+        arguments : ['e', 'extensive'],
+        callback  : setExtensiveMode
     }, {
-        arguments : ['b', 'beta'],
-        callback  : setB
+        arguments : ['p', 'port'],
+        callback  : setPort
     }, {
-        arguments : ['C'],
-        callback  : setC
+        arguments : 'q',
+        callback  : setQuietMode
     }]
 });
 
+// ------------------------------------------------------------------------------------------------------------- Methods
 
-// ------------------------------------------------------------------------------------------------- Methods / Callbacks
-
-function setA(value, values) {
-    console.log(value, values);
-    if (!value) { return; }
-
-    a = value;
+function setExtensiveMode() {
+    isExtensive = true;
 }
 
-function setB(value, values) {
-    if (!value) { return; }
-
-    b = value;
+function setPort(argumentPort) {
+    port = argumentPort;
 }
 
-function setC(value, values) {
-    c = true;
+function setQuietMode() {
+    isQuiet = true;
 }
 
 // ----------------------------------------------------------------------------------------------------- Result / Output
+
 console.log("Result:\n");
-console.log('a:', a);
-console.log('b:', b);
-console.log('c:', c);
+console.log('isExtensive:', isExtensive);
+console.log('isQuiet    :', isQuiet    );
+console.log('port       :', port       );
