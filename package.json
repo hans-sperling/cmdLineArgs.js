@@ -1,0 +1,28 @@
+{
+    "name"        : "cmdLineArgs",
+    "version"     : "0.1.0",
+    "description" : "",
+    "keywords" : [
+        "command line arguments",
+        "javascript",
+        "node.js"
+    ],
+    "repository" : {
+        "type": "git",
+        "url": "https://github.com/hans-sperling/cmdLineArgs.js"
+    },
+    "dependencies" : {},
+    "devDependencies" : {},
+    "project" : {
+        "url"   : "https://github.com/hans-sperling/cmdLineArgs.js/projects",
+        "email" : "info@bluejade.de"
+    },
+    "bugs" : {
+        "url"   : "https://github.com/hans-sperling/cmdLineArgs.js/issues",
+        "email" : "info@bluejade.de"
+    },
+    "contributors" : [{
+        "name"  : "Danny Grübl",
+        "email" : "info@bluejade.de"
+    }]
+}
