@@ -5,17 +5,14 @@ Simple handling of command line arguments in node.js
 
 ## Initialize / Usage
 
-- In code:
 ```javascript
+    // Load command-line-arguments script
     var cla = require('./cmdLineArgs.js');
 
-    cla.handle({...});
+    // Run it with your own configuration
+    cla.handle({ /* configuration */ });
 ```
 
-- On console:
-```
-    $ node ./dev/run.js -p 8080 -e -q -account "John Doe" "password123"
-```
 
 ## Method(s)
 
@@ -27,8 +24,8 @@ Simple handling of command line arguments in node.js
 
 ## Configuration
 
-- **caseSensitive** `boolean` _Triggers if arguments should be found if they are not in the right case; default is false_
-- **prefix** `string` _Character or string before an argument; default is '-'_
+- **caseSensitive** `boolean` _Triggers if arguments should be found if they are not in the right case; default is false; optional_
+- **prefix** `string` _Character or string before an argument; default is '-'; optional_
 - **validArguments** `array` _List of objects with all valid arguments filled with objects_
   - **arguments** `array|string` _Argument sting or Array of arguments like aliases_
   - **callback** `function` _Callback function, will be called if argument has been found_
@@ -36,6 +33,7 @@ Simple handling of command line arguments in node.js
 
 ## Example
 
+- In javascript
 ```javascript
     var cla     = require('./cmdLineArgs.js'),
     
@@ -48,39 +46,51 @@ Simple handling of command line arguments in node.js
     
     
     cla.handle({
-        caseSensitive  : false,
-        prefix         : '-',
-        validArguments : [{
-            arguments : ['a', 'account'],
-            callback  : setAccountData
-        }, {
-            arguments : ['e', 'extensive'],
-            callback  : setExtensiveMode
-        }, {
-            arguments : ['p', 'port'],
-            callback  : setPort
-        }, {
-            arguments : 'q',
-            callback  : setQuietMode
-        }]
+        caseSensitive  : false,             // Optional parameter
+        prefix         : '-',               // Optional parameter
+        validArguments : [{                 // Necessary list of listening command line arguments
+            arguments : ['a', 'account'],   // - If argument a or account are found cmdLineArgs will callback
+            callback  : setAccountData      //   given function setAccountData(value, remainingArguments)
+        }, {                                //
+            arguments : ['e', 'extensive'], // - If argument e or extensive are found cmdLineArgs will callback
+            callback  : setExtensiveMode    //   given function setExtensiveMode(value, remainingArguments)
+        }, {                                //
+            arguments : ['p', 'port'],      // - If argument p or port are found cmdLineArgs will callback
+            callback  : setPort             //   given function setPort(value, remainingArguments)
+        }, {                                //
+            arguments : 'q',                // - If argument q are found cmdLineArgs will callback
+            callback  : setQuietMode        //   given function setQuietMode(value, remainingArguments)
+        }]                                  //
     });
     
     
     
-    function setAccountData(value, otherArgs) {
+    function setAccountData(value, remainingArguments) {
         username = value;
         password = otherArgs[0];
     }
     
-    function setExtensiveMode() {
+    function setExtensiveMode(value, remainingArguments) {
         isExtensive = true;
     }
     
-    function setPort(argumentPort) {
+    function setPort(argumentPort, remainingArguments) {
         port = argumentPort;
     }
     
-    function setQuietMode() {
+    function setQuietMode(value, remainingArguments) {
         isQuiet = true;
     }
+```
+
+- On console
+```
+$ node ./dev/run.js -p 8080 -e -q -account "John Doe" "password123"
+
+       |          | |                                             |
+       |          | +------ Arguments for your application ------ +
+       |          |
+       |          +----------------+
+       |                           |
+       +- Your application script -+
 ```

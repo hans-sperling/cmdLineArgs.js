@@ -27,20 +27,20 @@ cla.handle({
 // ------------------------------------------------------------------------------------------------------------- Methods
 
 
-function setAccountData(value, otherArgs) {
+function setAccountData(value, remainingArguments) {
     username = value;
     password = otherArgs[0];
 }
 
-function setExtensiveMode() {
+function setExtensiveMode(value, remainingArguments) {
     isExtensive = true;
 }
 
-function setPort(argumentPort) {
+function setPort(argumentPort, remainingArguments) {
     port = argumentPort;
 }
 
-function setQuietMode() {
+function setQuietMode(value, remainingArguments) {
     isQuiet = true;
 }
 

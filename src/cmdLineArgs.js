@@ -1,11 +1,4 @@
 module.exports = (function cmdLineArgs() {
-    // ----------------------------------------------------------------------------------------------------- Preferences
-    var cfg = {
-        caseSensitive  : false,
-        prefix         : '-',
-        validArguments : []
-    };
-
     // ------------------------------------------------------------------------------------------------ Methods / Helper
 
     /**
@@ -84,6 +77,7 @@ module.exports = (function cmdLineArgs() {
         return result;
     }
 
+    // ------------------------------------------------------------------------------------------------ Methods / Public
 
     /**
      * Handles the given arguments of the command line.
@@ -97,21 +91,25 @@ module.exports = (function cmdLineArgs() {
      * @property {Function}     config.validArguments[0].callback - Callback function, will be called if argument has been found
      */
     function handle(config) {
-        var arguments      = process.argv,
-            restArguments  = arguments.slice(),
-            amount         = arguments.length,
-            argumentsIndex = 0,
+        var cfg = {
+                caseSensitive  : false,
+                prefix         : '-',
+                validArguments : []
+            },
+            arguments          = process.argv,
+            remainingArguments = arguments.slice(),
+            amount             = arguments.length,
+            argumentsIndex     = 0,
             argument,
             validArguments, validArgumentsIndex, validArgument,
             argumentList, argumentListIndex, argumentListItem;
 
-        cfg = deepMerge(cfg, config);
-
+        cfg            = deepMerge(cfg, config);
         validArguments = cfg.validArguments;
 
         for (; argumentsIndex < amount; argumentsIndex++) {
             argument = arguments[argumentsIndex];
-            restArguments.shift();
+            remainingArguments.shift();
 
             if (!cfg.caseSensitive) {
                 argument = argument.toLowerCase();
@@ -127,8 +125,8 @@ module.exports = (function cmdLineArgs() {
 
                         // Check if next argument is a value for the current argument or just an other argument
                         if (!!(arguments[argumentsIndex + 1]) && arguments[argumentsIndex + 1][0] !== cfg.prefix) {
-                            restArguments.shift();
-                            validArgument.callback(arguments[++argumentsIndex], restArguments);
+                            remainingArguments.shift();
+                            validArgument.callback(arguments[++argumentsIndex], remainingArguments);
                         }
                         else {
                             validArgument.callback();
@@ -149,8 +147,8 @@ module.exports = (function cmdLineArgs() {
 
                         if (argument === (cfg.prefix + argumentListItem)) {
                             if (!!(arguments[argumentsIndex + 1]) && arguments[argumentsIndex + 1][0] !== cfg.prefix) {
-                                restArguments.shift();
-                                validArgument.callback(arguments[++argumentsIndex], restArguments);
+                                remainingArguments.shift();
+                                validArgument.callback(arguments[++argumentsIndex], remainingArguments);
                             }
                             else {
                                 validArgument.callback();
@@ -162,8 +160,8 @@ module.exports = (function cmdLineArgs() {
         }
     }
 
+    // ---------------------------------------------------------------------------------------------------------- Return
     return {
         handle : handle
     };
 })();
-
