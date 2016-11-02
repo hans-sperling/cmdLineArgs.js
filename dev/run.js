@@ -1,54 +1,51 @@
+// ------------------------------------------------------------------------------------------------------------- Include
 
-var cla         = require('../src/cmdLineArgs.js'),
-    username    = '',
-    password    = '',
-    isExtensive = false,
-    isQuiet     = false,
-    port        = 8080;
+var cla = require('../src/cmdLineArgs.js');
 
-cla.handle({
-    caseSensitive  : false,
-    prefix         : '-',
-    validArguments : [{
-        arguments : ['a', 'account'],
-        callback  : setAccountData
-    }, {
-        arguments : ['e', 'extensive'],
-        callback  : setExtensiveMode
-    }, {
-        arguments : ['p', 'port'],
-        callback  : setPort
-    }, {
-        arguments : 'q',
-        callback  : setQuietMode
-    }]
-});
+// --------------------------------------------------------------------------------------------- Arguments to listen for
 
-// ------------------------------------------------------------------------------------------------------------- Methods
+var validArguments = [
+    {
+        arguments : ['a', 'account'],   // - If argument a or account are found cmdLineArgs will callback
+        callback  : setAccountData      //   given function setAccountData(value, remainingArguments)
+    }, {                                //
+        arguments : ['E', 'Extensive'], // - If argument e or extensive are found cmdLineArgs will callback
+        callback  : setExtensiveMode    //   given function setExtensiveMode(value, remainingArguments)
+    }, {                                //
+        arguments : ['p', 'port'],      // - If argument p or port are found cmdLineArgs will callback
+        callback  : setPort             //   given function setPort(value, remainingArguments)
+    }, {                                //
+        arguments : 'q',                // - If argument q are found cmdLineArgs will callback
+        callback  : setQuietMode        //   given function setQuietMode(value, remainingArguments)
+    }
+];
 
+// --------------------------------------------------------------------------------------------------- Optional settings
+
+var options = {
+    caseSensitive  : false, // Optional parameter to listen only to case sensitive arguments
+    prefix         : '-'    // Optional parameter to change the prefixing char/string of arguments
+};
+
+// -------------------------------------------------------------------------------------------------------- Run / Handle
+
+cla.handle(validArguments, options);
+
+// ------------------------------------------------------------------------------------------------- Callbacks / Outputs
 
 function setAccountData(value, remainingArguments) {
-    username = value;
-    password = otherArgs[0];
+    console.log('Username: ' + value);
+    console.log('Password: ' + remainingArguments[0]);
 }
 
-function setExtensiveMode(value, remainingArguments) {
-    isExtensive = true;
+function setExtensiveMode(port, remainingArguments) {
+    console.log('isExtensiveMode: true');
 }
 
-function setPort(argumentPort, remainingArguments) {
-    port = argumentPort;
+function setPort(value, remainingArguments) {
+    console.log('Port: ' + value);
 }
 
 function setQuietMode(value, remainingArguments) {
-    isQuiet = true;
+    console.log('isQuietMode: true');
 }
-
-// ----------------------------------------------------------------------------------------------------- Result / Output
-
-console.log("Result:\n");
-console.log('username   :', username);
-console.log('password   :', password);
-console.log('isExtensive:', isExtensive);
-console.log('isQuiet    :', isQuiet);
-console.log('port       :', port);
