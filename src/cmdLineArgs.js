@@ -24,6 +24,17 @@ module.exports = (function cmdLineArgs() {
 
 
     /**
+     * Checks if the type of the given parameter is an object.
+     *
+     * @param  {*} value
+     * @return {boolean}
+     */
+    function isObject(value) {
+        return Object.prototype.toString.call(value) == "[object Object]";
+    }
+
+
+    /**
      * Deep merges of two given objects.
      *
      * @param   {Object} objSlave
@@ -82,49 +93,47 @@ module.exports = (function cmdLineArgs() {
     /**
      * Handles the given arguments of the command line.
      *
-     * @param    {Object}       config
-     * @property {Boolean}      config.caseSensitive - Should arguments be found if they are not in the right case; default is 'false'.
-     * @property {String}       config.prefix - Character or string before an argument; default is '-'.
-     * @property {Array}        config.validArguments - List of all valid arguments filled with objects
-     * @property {Object}       config.validArguments
-     * @property {String|Array} config.validArguments[0].arguments - Argument sting or Array of arguments like aliases
-     * @property {Function}     config.validArguments[0].callback - Callback function, will be called if argument has been found
+     * @param    {Array}        argumentList              - List of all valid arguments filled with objects
+     * @property {String|Array} argumentList[0].arguments - Argument sting or Array of arguments like aliases
+     * @property {Function}     argumentList[0].callback  - Callback function, will be called if argument has been found
+     * @param    {Object}       options                   - Optional object to change default settings
      */
-    function handle(config) {
-        var cfg = {
+    function handle(argumentList, options) {
+        var opt = {
                 caseSensitive  : false,
-                prefix         : '-',
-                validArguments : []
+                prefix         : '-'
             },
             arguments          = process.argv,
             remainingArguments = arguments.slice(),
             amount             = arguments.length,
             argumentsIndex     = 0,
             argument,
-            validArguments, validArgumentsIndex, validArgument,
-            argumentList, argumentListIndex, argumentListItem;
+            validArgumentsIndex, validArgument,
+            aliasList, aliasListIndex, aliasListItem;
 
-        cfg            = deepMerge(cfg, config);
-        validArguments = cfg.validArguments;
+        options      = isObject(options) ? options : {};
+        argumentList = isArray(argumentList) ? argumentList : [];
+        opt          = deepMerge(opt, options);
+
 
         for (; argumentsIndex < amount; argumentsIndex++) {
             argument = arguments[argumentsIndex];
             remainingArguments.shift();
 
-            if (!cfg.caseSensitive) {
+            if (!opt.caseSensitive) {
                 argument = argument.toLowerCase();
             }
 
-            for (validArgumentsIndex in validArguments) {
-                if (!validArguments.hasOwnProperty(validArgumentsIndex)) { continue; }
+            for (validArgumentsIndex in argumentList) {
+                if (!argumentList.hasOwnProperty(validArgumentsIndex)) { continue; }
 
-                validArgument = validArguments[validArgumentsIndex];
+                validArgument = argumentList[validArgumentsIndex];
 
                 if (isString(validArgument.arguments)) {
-                    if (argument === (cfg.prefix + validArgument.arguments)) {
+                    if (argument === (opt.prefix + validArgument.arguments)) {
 
                         // Check if next argument is a value for the current argument or just an other argument
-                        if (!!(arguments[argumentsIndex + 1]) && arguments[argumentsIndex + 1][0] !== cfg.prefix) {
+                        if (!!(arguments[argumentsIndex + 1]) && arguments[argumentsIndex + 1][0] !== opt.prefix) {
                             remainingArguments.shift();
                             validArgument.callback(arguments[++argumentsIndex], remainingArguments);
                         }
@@ -134,19 +143,19 @@ module.exports = (function cmdLineArgs() {
                     }
                 }
                 else if (isArray(validArgument.arguments)) {
-                    argumentList = validArgument.arguments;
+                    aliasList = validArgument.arguments;
 
-                    for (argumentListIndex in argumentList) {
-                        if (!argumentList.hasOwnProperty(argumentListIndex)) { continue; }
+                    for (aliasListIndex in aliasList) {
+                        if (!aliasList.hasOwnProperty(aliasListIndex)) { continue; }
 
-                        argumentListItem = argumentList[argumentListIndex];
+                        aliasListItem = aliasList[aliasListIndex];
 
-                        if (!cfg.caseSensitive) {
-                            argumentListItem = argumentListItem.toLocaleLowerCase();
+                        if (!opt.caseSensitive) {
+                            aliasListItem = aliasListItem.toLocaleLowerCase();
                         }
 
-                        if (argument === (cfg.prefix + argumentListItem)) {
-                            if (!!(arguments[argumentsIndex + 1]) && arguments[argumentsIndex + 1][0] !== cfg.prefix) {
+                        if (argument === (opt.prefix + aliasListItem)) {
+                            if (!!(arguments[argumentsIndex + 1]) && arguments[argumentsIndex + 1][0] !== opt.prefix) {
                                 remainingArguments.shift();
                                 validArgument.callback(arguments[++argumentsIndex], remainingArguments);
                             }
