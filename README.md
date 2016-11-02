@@ -5,7 +5,7 @@ Simple handling of command line arguments in node.js
 
 ## Initialize / Usage
 
-cla.handle(_{Array}_ **validArguments** [, _{Object}_ **options**]);
+cla.handle ( _{Array}_ **validArguments** [, _{Object}_ **options**] );
 
 ```javascript
 // Load command-line-arguments script
